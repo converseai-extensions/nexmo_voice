@@ -1,0 +1,1382 @@
+{
+  "name": "nexmo_voice",
+  "displayName": "Nexmo Voice",
+  "description": "Nexmo IVR integration.",
+  "category": "Integrations",
+  "documentLink": "https://get.converse.ai/v2/docs/nexmo-voice",
+  "needsOAuth": false,
+  "isChannel": true,
+  "hasOAuth": false,
+  "logoName": "nexmo.png",
+  "providerData": [
+    {
+      "param": "application_id",
+      "displayName": "Application Id",
+      "description": "The id of the application that has been created for this integration. This will be generated after you register the plugin.",
+      "type": "STRING",
+      "optional": true,
+      "readOnly": true
+    },
+    {
+      "param": "api_key",
+      "displayName": "API Key",
+      "description": "You Nexmo api key, available in the developer dashboard https://dashboard.nexmo.com/getting-started-guide.",
+      "type": "STRING",
+      "optional": false
+    },
+    {
+      "param": "api_secret",
+      "displayName": "API Secret",
+      "description": "You Nexmo api secret, available in the developer dashboard https://dashboard.nexmo.com/getting-started-guide.",
+      "type": "PASSWORD",
+      "optional": false
+    },
+    {
+      "param": "inbound",
+      "displayName": "Handle Incoming Calls",
+      "description": "Options used for handling inbound calls.",
+      "type": "PARAM",
+      "optional": true,
+      "allowArray": false,
+      "valueParams": [
+        {
+          "param": "default",
+          "displayName": "Default Template",
+          "description": "The default template to invoke for inbound calls.",
+          "type": "PARAM",
+          "optional": true,
+          "allowArray": false,
+          "valueParams": [
+            {
+              "param": "intent",
+              "displayName": "Template",
+              "description": "The intent of the template that will be invoked.",
+              "type": "STRING",
+              "optional": false
+            },
+            {
+              "param": "entities",
+              "displayName": "States",
+              "description": "The names and values assigned to states when the template is invoked.",
+              "type": "MAP",
+              "optional": true
+            }
+          ]
+        },
+        {
+          "param": "numbers",
+          "displayName": "Numbers",
+          "description": "The numbers that will be linked to the integration application that can be used for incoming calls.",
+          "type": "PARAM",
+          "allowArray": true,
+          "optional": true,
+          "valueParams": [
+            {
+              "param": "msisdn",
+              "displayName": "Number",
+              "description": "The number to be used, available in the developer dashboard https://dashboard.nexmo.com/your-numbers.",
+              "type": "STRING",
+              "optional": false
+            },
+            {
+              "param": "country",
+              "displayName": "Country",
+              "description": "The character country code associated with the number.",
+              "type": "STRING",
+              "optional": false
+            },
+            {
+              "param": "voice",
+              "displayName": "Voice",
+              "description": "The voice that will be used to deliver the messages. If left blank the options voice will be used. A complete list of the voices are available here https://developer.nexmo.com/api/voice/ncco#voice-names.",
+              "type": "STRING",
+              "optional": true
+            },
+            {
+              "param": "intent",
+              "displayName": "Template",
+              "description": "The intent of the template that will be invoked. If this is not set the default template will be used.",
+              "type": "STRING",
+              "optional": true
+            },
+            {
+              "param": "entities",
+              "displayName": "States",
+              "description": "The names and values assigned to states when the template is invoked. These values will override the default template states if the number template is not specified.",
+              "type": "MAP",
+              "optional": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "param": "options",
+      "displayName": "Options",
+      "description": "The default options for sending messages and waiting for responses.",
+      "type": "PARAM",
+      "optional": true,
+      "allowArray": false,
+      "valueParams": [
+        {
+          "param": "voice",
+          "displayName": "Voice",
+          "description": "The voice that will be used to deliver the messages. A complete list of the voices are available here https://developer.nexmo.com/api/voice/ncco#voice-names",
+          "type": "STRING",
+          "optional": true
+        },
+        {
+          "param": "bargeIn",
+          "displayName": "Barge In",
+          "description": "State if you want your messages to be interrupted when the user presses a key.",
+          "type": "BOOLEAN",
+          "optional": true
+        },
+        {
+          "param": "loop",
+          "displayName": "Loop",
+          "description": "The number of times the message will be repeated before the call is closed. The default value is 1. Set to 0 to loop infinitely.",
+          "type": "STRING",
+          "optional": true
+        },
+        {
+          "param": "timeout",
+          "displayName": "Timeout",
+          "description": "The timeout, in seconds, for the user to make an input. Defaults to 3.",
+          "type": "STRING",
+          "optional": true
+        },
+        {
+          "param": "submitOnHash",
+          "displayName": "Submit On Hash",
+          "description": "State if you want the users input to be sent on hash. If not set the users input will be sent after the timeout.",
+          "type": "BOOLEAN",
+          "optional": true
+        },
+        {
+          "param": "maxDigits",
+          "displayName": "Max Digits",
+          "description": "The number of digits the user can press. The maximum value is 20.",
+          "type": "STRING",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "param": "callback_uri",
+      "displayName": "Callback URI",
+      "description": "The callback URI to be used by modules and outbound.",
+      "type": "STRING",
+      "optional": true,
+      "readOnly": true
+    },
+    {
+      "param": "events",
+      "displayName": "Events",
+      "description": "Specify templates to be triggered when Nexmo call events are received.",
+      "type": "PARAM",
+      "optional": true,
+      "allowArray": false,
+      "valueParams": [
+        {
+          "param": "started",
+          "displayName": "Started",
+          "description": "Template to trigger when we receive the started event",
+          "type": "PARAM",
+          "optional": true,
+          "allowArray": false,
+          "valueParams": [
+            {
+              "param": "intent",
+              "displayName": "Template",
+              "description": "The intent of the template that will be invoked.",
+              "type": "STRING",
+              "optional": false
+            },
+            {
+              "param": "entities",
+              "displayName": "States",
+              "description": "The names and values assigned to states when the template is invoked.",
+              "type": "MAP",
+              "optional": true
+            }
+          ]
+        },
+        {
+          "param": "ringing",
+          "displayName": "Ringing",
+          "description": "Template to trigger when we receive the ringing event",
+          "type": "PARAM",
+          "optional": true,
+          "allowArray": false,
+          "valueParams": [
+            {
+              "param": "intent",
+              "displayName": "Template",
+              "description": "The intent of the template that will be invoked.",
+              "type": "STRING",
+              "optional": false
+            },
+            {
+              "param": "entities",
+              "displayName": "States",
+              "description": "The names and values assigned to states when the template is invoked.",
+              "type": "MAP",
+              "optional": true
+            }
+          ]
+        },
+        {
+          "param": "answered",
+          "displayName": "Answered",
+          "description": "Template to trigger when we receive the answered event",
+          "type": "PARAM",
+          "optional": true,
+          "allowArray": false,
+          "valueParams": [
+            {
+              "param": "intent",
+              "displayName": "Template",
+              "description": "The intent of the template that will be invoked.",
+              "type": "STRING",
+              "optional": false
+            },
+            {
+              "param": "entities",
+              "displayName": "States",
+              "description": "The names and values assigned to states when the template is invoked.",
+              "type": "MAP",
+              "optional": true
+            }
+          ]
+        },
+        {
+          "param": "machine",
+          "displayName": "Machine",
+          "description": "Template to trigger when we receive the machine event",
+          "type": "PARAM",
+          "optional": true,
+          "allowArray": false,
+          "valueParams": [
+            {
+              "param": "intent",
+              "displayName": "Template",
+              "description": "The intent of the template that will be invoked.",
+              "type": "STRING",
+              "optional": false
+            },
+            {
+              "param": "entities",
+              "displayName": "States",
+              "description": "The names and values assigned to states when the template is invoked.",
+              "type": "MAP",
+              "optional": true
+            }
+          ]
+        },
+        {
+          "param": "completed",
+          "displayName": "Completed",
+          "description": "Template to trigger when we receive the completed event",
+          "type": "PARAM",
+          "optional": true,
+          "allowArray": false,
+          "valueParams": [
+            {
+              "param": "intent",
+              "displayName": "Template",
+              "description": "The intent of the template that will be invoked.",
+              "type": "STRING",
+              "optional": false
+            },
+            {
+              "param": "entities",
+              "displayName": "States",
+              "description": "The names and values assigned to states when the template is invoked.",
+              "type": "MAP",
+              "optional": true
+            }
+          ]
+        },
+        {
+          "param": "timeout",
+          "displayName": "Timeout",
+          "description": "Template to trigger when we receive the timeout event",
+          "type": "PARAM",
+          "optional": true,
+          "allowArray": false,
+          "valueParams": [
+            {
+              "param": "intent",
+              "displayName": "Template",
+              "description": "The intent of the template that will be invoked.",
+              "type": "STRING",
+              "optional": false
+            },
+            {
+              "param": "entities",
+              "displayName": "States",
+              "description": "The names and values assigned to states when the template is invoked.",
+              "type": "MAP",
+              "optional": true
+            }
+          ]
+        },
+        {
+          "param": "failed",
+          "displayName": "Failed",
+          "description": "Template to trigger when we receive the failed event",
+          "type": "PARAM",
+          "optional": true,
+          "allowArray": false,
+          "valueParams": [
+            {
+              "param": "intent",
+              "displayName": "Template",
+              "description": "The intent of the template that will be invoked.",
+              "type": "STRING",
+              "optional": false
+            },
+            {
+              "param": "entities",
+              "displayName": "States",
+              "description": "The names and values assigned to states when the template is invoked.",
+              "type": "MAP",
+              "optional": true
+            }
+          ]
+        },
+        {
+          "param": "rejected",
+          "displayName": "Rejected",
+          "description": "Template to trigger when we receive the rejected event",
+          "type": "PARAM",
+          "optional": true,
+          "allowArray": false,
+          "valueParams": [
+            {
+              "param": "intent",
+              "displayName": "Template",
+              "description": "The intent of the template that will be invoked.",
+              "type": "STRING",
+              "optional": false
+            },
+            {
+              "param": "entities",
+              "displayName": "States",
+              "description": "The names and values assigned to states when the template is invoked.",
+              "type": "MAP",
+              "optional": true
+            }
+          ]
+        },
+        {
+          "param": "cancelled",
+          "displayName": "Cancelled",
+          "description": "Template to trigger when we receive the cancelled event",
+          "type": "PARAM",
+          "optional": true,
+          "allowArray": false,
+          "valueParams": [
+            {
+              "param": "intent",
+              "displayName": "Template",
+              "description": "The intent of the template that will be invoked.",
+              "type": "STRING",
+              "optional": false
+            },
+            {
+              "param": "entities",
+              "displayName": "States",
+              "description": "The names and values assigned to states when the template is invoked.",
+              "type": "MAP",
+              "optional": true
+            }
+          ]
+        },
+        {
+          "param": "busy",
+          "displayName": "Busy",
+          "description": "Template to trigger when we receive the busy event",
+          "type": "PARAM",
+          "optional": true,
+          "allowArray": false,
+          "valueParams": [
+            {
+              "param": "intent",
+              "displayName": "Template",
+              "description": "The intent of the template that will be invoked.",
+              "type": "STRING",
+              "optional": false
+            },
+            {
+              "param": "entities",
+              "displayName": "States",
+              "description": "The names and values assigned to states when the template is invoked.",
+              "type": "MAP",
+              "optional": true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "uiSpec": {
+    "providerTabs": [
+      {
+        "text": "Settings",
+        "params": [
+          "api_key",
+          "api_secret",
+          "inbound",
+          "options",
+          "events",
+          "application_id"
+        ],
+        "type": "SETTINGS",
+        "default": "true"
+      }
+    ]
+  },
+  "module": [
+    {
+      "id": "connect",
+      "name": "Forward Call",
+      "description": "Forward the current call to another endpoint.",
+      "documentLink": "https://get.converse.ai/v2/docs/nexmo_connect",
+      "hasReturn": false,
+      "needsChannel": true,
+      "param": [
+        {
+          "param": "message",
+          "displayName": "Message",
+          "description": "An optional message that will be played before the connection is attempted.",
+          "type": "PARAM",
+          "optional": true,
+          "valueParams": [
+            {
+              "param": "message",
+              "displayName": "Message",
+              "descripton": "The message that will be sent to the user.",
+              "type": "STRING",
+              "optional": false
+            },
+            {
+              "param": "voice",
+              "displayName": "Voice",
+              "description": "The voice that will be used to deliver the messages. A complete list of the voices are available here https://developer.nexmo.com/api/voice/ncco#voice-names",
+              "type": "STRING",
+              "optional": true
+            },
+            {
+              "param": "loop",
+              "displayName": "Loop",
+              "description": "The number of times the message will be repeated before the call is closed. The default value is 1. Set to 0 to loop infinitely.",
+              "type": "STRING",
+              "optional": true
+            }
+          ]
+        },
+        {
+          "param": "from",
+          "displayName": "From",
+          "description": "The number of who the connecting call is from. If not set the active number will be used. This must be one of your Nexmo virtual numbers, another value will result in the caller ID being unknown.",
+          "type": "STRING",
+          "optional": true
+        },
+        {
+          "param": "timeout",
+          "displayName": "Timeout",
+          "description": "The length of time, in seconds, before the connection attempt will be cancelled",
+          "type": "STRING",
+          "optional": false
+        },
+        {
+          "param": "fallback",
+          "displayName": "Fallback Conversation",
+          "description": "A conversation template that will be triggered if the connection attempt fails, either due to timeout, failing, or being rejected by the endpoint.",
+          "type": "PARAM",
+          "optional": true,
+          "valueParams": [
+            {
+              "param": "intent",
+              "displayName": "Template",
+              "description": "The intent of the template that will be invoked.",
+              "type": "STRING",
+              "optional": false
+            },
+            {
+              "param": "entities",
+              "displayName": "States",
+              "description": "The names and values assigned to states when the template is invoked.",
+              "type": "MAP",
+              "optional": true
+            }
+          ]
+        },
+        {
+          "param": "machine_detection",
+          "displayName": "Machine Detection",
+          "description": "State the behaviour if a machine is detected.",
+          "optional": true,
+          "type": "ENUM",
+          "value": [
+            {
+              "label": "Continue",
+              "value": "CONTINUE",
+              "default": true
+            },
+            {
+              "label": "Hangup",
+              "value": "HANGUP"
+            }
+          ]
+        },
+        {
+          "param": "endpoint",
+          "displayName": "Endpoint Type",
+          "description": "The type of the endpoint that the call will be connected to, either Phone, Webhook, or SIP.",
+          "optional": false,
+          "type": "ENUM",
+          "value": [
+            {
+              "label": "Phone",
+              "value": "PHONE",
+              "default": true
+            },
+            {
+              "label": "Websocket",
+              "value": "WEBSOCKET"
+            },
+            {
+              "label": "SIP",
+              "value": "SIP"
+            }
+          ]
+        },
+        {
+          "param": "phone",
+          "displayName": "Phone",
+          "description": "The details if connecting to a phone number",
+          "type": "PARAM",
+          "optional": false,
+          "hideExpression": "(model.endpoint && model.endpoint.value && model.endpoint.value !== \"PHONE\") || false",
+          "valueParams": [
+            {
+              "param": "number",
+              "displayName": "Number",
+              "description": "The number you will connect the call too",
+              "type": "STRING",
+              "optional": false
+            },
+            {
+              "param": "dtmfAnswer",
+              "displayName": "DTMF Answer",
+              "description": "Set the digits that are sent to the user as soon as the call is answered. The * and # digits are respected. You create pauses using p. Each pause is 500ms.",
+              "type": "STRING",
+              "optional": true
+            }
+          ]
+        },
+        {
+          "param": "websocket",
+          "displayName": "Websocket",
+          "description": "The details if connecting to a websocket",
+          "type": "PARAM",
+          "optional": false,
+          "hideExpression": "(model.endpoint && model.endpoint.value && model.endpoint.value !== \"WEBSOCKET\") || false",
+          "valueParams": [
+            {
+              "param": "uri",
+              "displayName": "URI",
+              "description": "The URI to the websocket you are streaming to.",
+              "type": "STRING",
+              "optional": false
+            },
+            {
+              "param": "contentType",
+              "displayName": "Content Type",
+              "description": "The internet media type for the audio you are streaming. Currently, possible values are: audio/l16;rate=16000",
+              "type": "STRING",
+              "optional": false
+            },
+            {
+              "param": "headers",
+              "displayName": "Headers",
+              "description": "Additional values sent as metadata",
+              "type": "MAP",
+              "optional": true
+            }
+          ]
+        },
+        {
+          "param": "sip",
+          "displayName": "SIP",
+          "description": "Details if connecting to a SIP endpoint",
+          "type": "PARAM",
+          "optional": false,
+          "hideExpression": "(model.endpoint && model.endpoint.value && model.endpoint.value !== \"SIP\") || false",
+          "valueParams": [
+            {
+              "param": "uri",
+              "displayName": "URI",
+              "description": "The SIP URI to the endpoint you are connecting to in the format sip:rebekka@sip.example.com.",
+              "type": "STRING",
+              "optional": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "stream",
+      "name": "Play Audio",
+      "description": "Play an audio file over an existing call.",
+      "hasReturn": false,
+      "needsChannel": true,
+      "documentLink": "https://get.converse.ai/v2/docs/nexmo_stream",
+      "param": [
+        {
+          "param": "send_media_as",
+          "displayName": "Send Media As",
+          "description": "State how you want this stream to be treated, either as the next states question or as the current states answer.",
+          "type": "ENUM",
+          "optional": false,
+          "value": [
+            {
+              "label": "Next Question",
+              "value": "QUESTION",
+              "default": true
+            },
+            {
+              "label": "Current Answer",
+              "value": "ANSWER"
+            }
+          ]
+        },
+        {
+          "param": "input_options",
+          "displayName": "Input Options",
+          "description": "Optional input options that can be used to override the account defaults.",
+          "type": "PARAM",
+          "optional": true,
+          "hideExpression": "(model.send_media_as && model.send_media_as.value && model.send_media_as.value !== \"QUESTION\") || false",
+          "valueParams": [
+            {
+              "param": "timeout",
+              "displayName": "Timeout",
+              "description": "The timeout, in seconds, for the user to make an input.",
+              "type": "STRING",
+              "optional": true
+            },
+            {
+              "param": "submitOnHash",
+              "displayName": "Submit On Hash",
+              "description": "State if you want the users input to be sent on hash. If not set the users input will be sent after the timeout.",
+              "type": "ENUM",
+              "optional": true,
+              "value": [
+                {
+                  "label": "Use Default",
+                  "value": "",
+                  "default": true
+                },
+                {
+                  "label": "Yes",
+                  "value": "TRUE"
+                },
+                {
+                  "label": "No",
+                  "value": "FALSE"
+                }
+              ]
+            },
+            {
+              "param": "maxDigits",
+              "displayName": "Max Digits",
+              "description": "The number of digits the user can press. The maximum value is 20.",
+              "type": "STRING",
+              "optional": true
+            }
+          ]
+        },
+        {
+          "param": "stream_url",
+          "displayName": "Stream URL",
+          "description": "The URL for the source of the audio file.",
+          "type": "NUMBER",
+          "optional": true
+        },
+        {
+          "param": "level",
+          "displayName": "Level",
+          "description": "Set the audio level of the stream in the range -1 >=level<=1 with a precision of 0.1. The default value is 0.",
+          "type": "NUMBER",
+          "optional": true
+        },
+        {
+          "param": "bargeIn",
+          "displayName": "Barge In",
+          "description": "State if this action is terminated when the user presses a button on the keypad.",
+          "type": "ENUM",
+          "hideExpression": "(model.send_media_as && model.send_media_as.value && model.send_media_as.value !== \"QUESTION\") || false",
+          "optional": true,
+          "value": [
+            {
+              "label": "Use Default",
+              "value": "",
+              "default": true
+            },
+            {
+              "label": "Yes",
+              "value": "TRUE"
+            },
+            {
+              "label": "No",
+              "value": "FALSE"
+            }
+          ]
+        },
+        {
+          "param": "loop",
+          "displayName": "Loop",
+          "description": "The number of times audio is repeated before the Call is closed. The default value is 1. Set to 0 to loop infinitely.",
+          "type": "NUMBER",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "start_call",
+      "name": "Start Call",
+      "description": "Start an outgoing call with a specified endpoint.",
+      "documentLink": "https://get.converse.ai/v2/docs/nexmo_start_call",
+      "hasReturn": true,
+      "needsChannel": false,
+      "param": [
+        {
+          "param": "to",
+          "displayName": "To",
+          "description": "An array of one or more endpoints to start the call with.",
+          "type": "PARAM",
+          "optional": false,
+          "allowArray": true,
+          "valueParams": [
+            {
+              "param": "endpoint",
+              "displayName": "To Type",
+              "description": "The type of the endpoint that the call will be connected to, either Phone, Webhook, or SIP.",
+              "optional": false,
+              "type": "ENUM",
+              "value": [
+                {
+                  "label": "Phone",
+                  "value": "PHONE",
+                  "default": true
+                },
+                {
+                  "label": "Websocket",
+                  "value": "WEBSOCKET"
+                },
+                {
+                  "label": "SIP",
+                  "value": "SIP"
+                }
+              ]
+            },
+            {
+              "param": "phone",
+              "displayName": "Phone",
+              "description": "The details if connecting to a phone number",
+              "type": "PARAM",
+              "optional": false,
+              "hideExpression": "(model.endpoint && model.endpoint.value && model.endpoint.value !== \"PHONE\") || false",
+              "valueParams": [
+                {
+                  "param": "number",
+                  "displayName": "Number",
+                  "description": "The number you will connect the call too",
+                  "type": "STRING",
+                  "optional": false
+                },
+                {
+                  "param": "dtmfAnswer",
+                  "displayName": "DTMF Answer",
+                  "description": "Set the digits that are sent to the user as soon as the call is answered. The * and # digits are respected. You create pauses using p. Each pause is 500ms.",
+                  "type": "STRING",
+                  "optional": true
+                }
+              ]
+            },
+            {
+              "param": "websocket",
+              "displayName": "Websocket",
+              "description": "The details if connecting to a websocket",
+              "type": "PARAM",
+              "optional": false,
+              "hideExpression": "(model.endpoint && model.endpoint.value && model.endpoint.value !== \"WEBSOCKET\") || false",
+              "valueParams": [
+                {
+                  "param": "uri",
+                  "displayName": "URI",
+                  "description": "The URI to the websocket you are streaming to.",
+                  "type": "STRING",
+                  "optional": false
+                },
+                {
+                  "param": "contentType",
+                  "displayName": "Content Type",
+                  "description": "The internet media type for the audio you are streaming. Currently, possible values are: audio/l16;rate=16000",
+                  "type": "STRING",
+                  "optional": false
+                },
+                {
+                  "param": "headers",
+                  "displayName": "Headers",
+                  "description": "Additional values sent as metadata",
+                  "type": "MAP",
+                  "optional": true
+                }
+              ]
+            },
+            {
+              "param": "sip",
+              "displayName": "SIP",
+              "description": "Details if connecting to a SIP endpoint",
+              "type": "PARAM",
+              "optional": false,
+              "hideExpression": "(model.endpoint && model.endpoint.value && model.endpoint.value !== \"SIP\") || false",
+              "valueParams": [
+                {
+                  "param": "uri",
+                  "displayName": "URI",
+                  "description": "The SIP URI to the endpoint you are connecting to in the format sip:rebekka@sip.example.com.",
+                  "type": "STRING",
+                  "optional": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "param": "from_endpoint",
+          "displayName": "From Type",
+          "description": "The type of the endpoint that the call will be connected from, either Phone, Webhook, or SIP.",
+          "optional": false,
+          "type": "ENUM",
+          "value": [
+            {
+              "label": "Phone",
+              "value": "PHONE",
+              "default": true
+            },
+            {
+              "label": "Websocket",
+              "value": "WEBSOCKET"
+            },
+            {
+              "label": "SIP",
+              "value": "SIP"
+            }
+          ]
+        },
+        {
+          "param": "from_phone",
+          "displayName": "Phone",
+          "description": "The details if connecting from a phone number",
+          "type": "PARAM",
+          "optional": false,
+          "hideExpression": "(model.from_endpoint && model.from_endpoint.value && model.from_endpoint.value !== \"PHONE\") || false",
+          "valueParams": [
+            {
+              "param": "number",
+              "displayName": "Number",
+              "description": "The number you will connect the call from",
+              "type": "STRING",
+              "optional": false
+            },
+            {
+              "param": "dtmfAnswer",
+              "displayName": "DTMF Answer",
+              "description": "Set the digits that are sent to the user as soon as the call is answered. The * and # digits are respected. You create pauses using p. Each pause is 500ms.",
+              "type": "STRING",
+              "optional": true
+            }
+          ]
+        },
+        {
+          "param": "from_websocket",
+          "displayName": "Websocket",
+          "description": "The details if connecting from a websocket",
+          "type": "PARAM",
+          "optional": false,
+          "hideExpression": "(model.from_endpoint && model.from_endpoint.value && model.from_endpoint.value !== \"WEBSOCKET\") || false",
+          "valueParams": [
+            {
+              "param": "uri",
+              "displayName": "URI",
+              "description": "The URI to the websocket you are streaming from.",
+              "type": "STRING",
+              "optional": false
+            },
+            {
+              "param": "contentType",
+              "displayName": "Content Type",
+              "description": "The internet media type for the audio you are streaming. Currently, possible values are: audio/l16;rate=16000",
+              "type": "STRING",
+              "optional": false
+            },
+            {
+              "param": "headers",
+              "displayName": "Headers",
+              "description": "Additional values sent as metadata",
+              "type": "MAP",
+              "optional": true
+            }
+          ]
+        },
+        {
+          "param": "from_sip",
+          "displayName": "SIP",
+          "description": "Details if connecting from a SIP endpoint",
+          "type": "PARAM",
+          "optional": false,
+          "hideExpression": "(model.from_endpoint && model.from_endpoint.value && model.from_endpoint.value !== \"SIP\") || false",
+          "valueParams": [
+            {
+              "param": "uri",
+              "displayName": "URI",
+              "description": "The SIP URI to the endpoint you are connecting to in the format sip:rebekka@sip.example.com.",
+              "type": "STRING",
+              "optional": false
+            }
+          ]
+        },
+        {
+          "param": "intent",
+          "displayName": "Conversation",
+          "description": "The details of the template that will be triggered when the call is accepted.",
+          "type": "PARAM",
+          "optional": false,
+          "valueParams": [
+            {
+              "param": "intent",
+              "displayName": "Template",
+              "description": "The intent of the template that will be invoked.",
+              "type": "STRING",
+              "optional": false
+            },
+            {
+              "param": "entities",
+              "displayName": "States",
+              "description": "The names and values assigned to states when the template is invoked.",
+              "type": "MAP",
+              "optional": true
+            }
+          ]
+        },
+        {
+          "param": "machine_detection",
+          "displayName": "Machine Detection",
+          "description": "State the behaviour if a machine is detected.",
+          "optional": true,
+          "type": "ENUM",
+          "value": [
+            {
+              "label": "Continue",
+              "value": "CONTINUE",
+              "default": true
+            },
+            {
+              "label": "Hangup",
+              "value": "HANGUP"
+            }
+          ]
+        },
+        {
+          "param": "length_timer",
+          "displayName": "Length Timer",
+          "description": "Set the number of seconds that elapse before Nexmo hangs up after the call starts. The default value is 7200, two hours. This is also the maximum value.",
+          "type": "STRING",
+          "optional": false
+        },
+        {
+          "param": "ringing_timer",
+          "displayName": "Ringing Timer",
+          "description": "Set the number of seconds that elapse before Nexmo hangs up after the call starts. The default value is 60, the maximum value is 120.",
+          "type": "STRING",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "id": "record",
+      "name": "Record Call",
+      "description": "Start recording the call.",
+      "documentLink": "https://get.converse.ai/v2/docs/nexmo_record",
+      "hasReturn": true,
+      "param": [
+        {
+          "param": "start_message",
+          "displayName": "Start Message",
+          "description": "A message that will be played before the recoding",
+          "type": "PARAM",
+          "optional": true,
+          "valueParams": [
+            {
+              "param": "message",
+              "displayName": "Message",
+              "descripton": "The message that will be sent to the user.",
+              "type": "STRING",
+              "optional": false
+            },
+            {
+              "param": "voice",
+              "displayName": "Voice",
+              "description": "The voice that will be used to deliver the messages. A complete list of the voices are available here https://developer.nexmo.com/api/voice/ncco#voice-names",
+              "type": "STRING",
+              "optional": true
+            },
+            {
+              "param": "loop",
+              "displayName": "Loop",
+              "description": "The number of times the message will be repeated before the call is closed. The default value is 1. Set to 0 to loop infinitely.",
+              "type": "STRING",
+              "optional": true
+            }
+          ]
+        },
+        {
+          "param": "end_message",
+          "displayName": "End Message",
+          "description": "A message that will be played after the recording.",
+          "type": "PARAM",
+          "optional": true,
+          "valueParams": [
+            {
+              "param": "message",
+              "displayName": "Message",
+              "descripton": "The message that will be sent to the user.",
+              "type": "STRING",
+              "optional": false
+            },
+            {
+              "param": "voice",
+              "displayName": "Voice",
+              "description": "The voice that will be used to deliver the messages. A complete list of the voices are available here https://developer.nexmo.com/api/voice/ncco#voice-names",
+              "type": "STRING",
+              "optional": true
+            },
+            {
+              "param": "loop",
+              "displayName": "Loop",
+              "description": "The number of times the message will be repeated before the call is closed. The default value is 1. Set to 0 to loop infinitely.",
+              "type": "STRING",
+              "optional": true
+            }
+          ]
+        },
+        {
+          "param": "format",
+          "displayName": "Format",
+          "description": "Record the call in a specific format.",
+          "optional": true,
+          "type": "ENUM",
+          "value": [
+            {
+              "label": "MP3",
+              "value": "mp3",
+              "default": true
+            },
+            {
+              "label": "WAV",
+              "value": "wav"
+            }
+          ]
+        },
+        {
+          "param": "endOnSilence",
+          "displayName": "End On Silence",
+          "description": "Stop recording after the specified number of seconds of silence. You can specify a value between 3 seconds and 10 seconds, inclusive. This will default to 3 seconds.",
+          "type": "NUMBER",
+          "optional": true
+        },
+        {
+          "param": "endOnKey",
+          "displayName": "End On Key",
+          "description": "Stop recording when a digit is pressed on the handset. Possible values are: * , # or any single number e.g 9",
+          "type": "STRING",
+          "optional": true
+        },
+        {
+          "param": "timeOut",
+          "displayName": "Time Out",
+          "description": "The maximum length of a recording in seconds. The range of possible values is between 3 seconds and 7200 seconds(2 hours)",
+          "type": "NUMBER",
+          "optional": true
+        },
+        {
+          "param": "beepStart",
+          "displayName": "Beep Start",
+          "description": "Set to true to play a beep when a recording starts",
+          "type": "BOOLEAN",
+          "optional": false
+        }
+      ],
+      "needsChannel": true
+    },
+    {
+      "id": "create_conference",
+      "name": "Create Conference",
+      "description": "Create a conference call and return the access code",
+      "documentLink": "https://get.converse.ai/v2/docs/nexmo_create_conference",
+      "hasReturn": true,
+      "param": [
+        {
+          "param": "record",
+          "displayName": "Record",
+          "description": "Specify if the conference should be recorded or not.",
+          "optional": true,
+          "type": "BOOLEAN"
+        },
+        {
+          "param": "record_options",
+          "displayName": "Recording Options",
+          "description": "Additional options for when recording a conference.",
+          "optional": true,
+          "type": "PARAM",
+          "hideExpression": "(model.record && model.record.value && model.record.value !== true) || false",
+          "valueParams": [
+            {
+              "param": "format",
+              "displayName": "Format",
+              "description": "Record the conference in a specific format.",
+              "optional": true,
+              "type": "ENUM",
+              "value": [
+                {
+                  "label": "MP3",
+                  "value": "mp3",
+                  "default": true
+                },
+                {
+                  "label": "WAV",
+                  "value": "wav"
+                }
+              ]
+            },
+            {
+              "param": "intent",
+              "displayName": "Template",
+              "description": "The intent of the template that will be invoked when the recording is ready.",
+              "type": "STRING",
+              "optional": false
+            },
+            {
+              "param": "entities",
+              "displayName": "States",
+              "description": "The names and values assigned to states when the template is invoked.",
+              "type": "MAP",
+              "optional": true
+            }
+          ]
+        },
+        {
+          "param": "moderator",
+          "displayName": "Has Moderator",
+          "description": "State if the conference call will use a moderator. Moderated calls will not start until the moderator joins",
+          "optional": true,
+          "type": "BOOLEAN"
+        },
+        {
+          "param": "moderator_options",
+          "displayName": "Moderator Options",
+          "description": "Additional options when the conference has a moderator.",
+          "optional": true,
+          "type": "PARAM",
+          "hideExpression": "(model.moderator && model.moderator.value && model.moderator.value !== true) || false",
+          "valueParams": [
+            {
+              "param": "message",
+              "displayName": "Message",
+              "description": "A message that is sent to the participants before the moderator joins the conference call.",
+              "type": "STRING",
+              "optional": true
+            },
+            {
+              "param": "music",
+              "displayName": "Music",
+              "description": "A URL to the mp3 file to stream to participants until the conference starts.",
+              "type": "STRING",
+              "optional": true
+            },
+            {
+              "param": "endOnExit",
+              "displayName": "End on Exit",
+              "description": "Set to true so the conference is ended when the moderator hangs up.",
+              "type": "BOOLEAN",
+              "optional": false
+            }
+          ]
+        }
+      ],
+      "needsChannel": false
+    },
+    {
+      "id": "delete_conference",
+      "name": "Delete Conference",
+      "description": "Delete a conference call that has been created by Create Conference",
+      "documentLink": "https://get.converse.ai/v2/docs/nexmo_delete_conference",
+      "hasReturn": false,
+      "param": [
+        {
+          "param": "code",
+          "displayName": "Conference Code",
+          "description": "The code used to join the conference call",
+          "type": "STRING",
+          "optional": false
+        }
+      ],
+      "needsChannel": false
+    },
+    {
+      "id": "join_conference",
+      "name": "Join Conference",
+      "description": "Join a conference call that has been created by Create Conference",
+      "documentLink": "https://get.converse.ai/v2/docs/nexmo_join_conference",
+      "hasReturn": false,
+      "param": [
+        {
+          "param": "code",
+          "displayName": "Conference Code",
+          "description": "The code used to join the conference call",
+          "type": "STRING",
+          "optional": false
+        }
+      ],
+      "needsChannel": true,
+      "exits": [
+        "connected",
+        "invalid"
+      ]
+    },
+    {
+      "id": "talk",
+      "name": "Send Message",
+      "description": "Send text that will be convered to speach using the specified options.",
+      "hasReturn": false,
+      "param": [
+        {
+          "param": "send_media_as",
+          "displayName": "Send Media As",
+          "description": "State how you want this message is to be treated, either as the next states question or as the current states answer.",
+          "type": "ENUM",
+          "optional": true,
+          "value": [
+            {
+              "label": "Next Question",
+              "value": "QUESTION",
+              "default": true
+            },
+            {
+              "label": "Current Answer",
+              "value": "ANSWER"
+            }
+          ]
+        },
+        {
+          "param": "message",
+          "displayName": "Message",
+          "descripton": "The message that will be sent to the user.",
+          "type": "STRING",
+          "optional": false
+        },
+        {
+          "param": "voice",
+          "displayName": "Voice",
+          "description": "The voice that will be used to deliver the messages. A complete list of the voices are available here https://developer.nexmo.com/api/voice/ncco#voice-names",
+          "type": "STRING",
+          "optional": true
+        },
+        {
+          "param": "bargeIn",
+          "displayName": "Barge In",
+          "description": "State if you want your messages to be interrupted when the user presses a key.",
+          "hideExpression": "(model.send_media_as && model.send_media_as.value && model.send_media_as.value !== \"QUESTION\") || false",
+          "type": "ENUM",
+          "optional": true,
+          "value": [
+            {
+              "label": "Use Default",
+              "value": "",
+              "default": true
+            },
+            {
+              "label": "Yes",
+              "value": "TRUE"
+            },
+            {
+              "label": "No",
+              "value": "FALSE"
+            }
+          ]
+        },
+        {
+          "param": "loop",
+          "displayName": "Loop",
+          "description": "The number of times the message will be repeated before the call is closed. The default value is 1. Set to 0 to loop infinitely.",
+          "type": "STRING",
+          "optional": true
+        },
+        {
+          "param": "options",
+          "displayName": "User Input Options",
+          "description": "The options for receiving input from the user. If the values are not set the plugin defaults will be used.",
+          "type": "PARAM",
+          "optional": true,
+          "allowArray": false,
+          "hideExpression": "(model.send_media_as && model.send_media_as.value && model.send_media_as.value !== \"QUESTION\") || false",
+          "valueParams": [
+            {
+              "param": "timeout",
+              "displayName": "Timeout",
+              "description": "The timeout, in seconds, for the user to make an input. Defaults to 3.",
+              "type": "STRING",
+              "optional": true
+            },
+            {
+              "param": "submitOnHash",
+              "displayName": "Submit On Hash",
+              "description": "State if you want the users input to be sent on hash. If not set the users input will be sent after the timeout.",
+              "type": "ENUM",
+              "optional": true,
+              "value": [
+                {
+                  "label": "Use Default",
+                  "value": "",
+                  "default": true
+                },
+                {
+                  "label": "Yes",
+                  "value": "TRUE"
+                },
+                {
+                  "label": "No",
+                  "value": "FALSE"
+                }
+              ]
+            },
+            {
+              "param": "maxDigits",
+              "displayName": "Max Digits",
+              "description": "The number of digits the user can press. The maximum value is 20.",
+              "type": "STRING",
+              "optional": true
+            }
+          ]
+        }
+      ],
+      "needsChannel": true
+    }
+  ]
+}
