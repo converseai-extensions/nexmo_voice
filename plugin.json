@@ -3,7 +3,7 @@
   "displayName": "Nexmo",
   "description": "Nexmo Voice and SMS integration.",
   "category": "Integrations",
-  "documentLink": "https://get.converse.ai/v2/docs/nexmo-voice",
+  "documentLink": "https://get.converse.ai/v2/docs/nexmo",
   "needsOAuth": false,
   "isChannel": true,
   "hasOAuth": false,
