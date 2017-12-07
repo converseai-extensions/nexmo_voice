@@ -1,13 +1,45 @@
 {
   "name": "nexmo_voice",
-  "displayName": "Nexmo Voice",
-  "description": "Nexmo IVR integration.",
+  "displayName": "Nexmo",
+  "description": "Nexmo Voice and SMS integration.",
   "category": "Integrations",
   "documentLink": "https://get.converse.ai/v2/docs/nexmo-voice",
   "needsOAuth": false,
   "isChannel": true,
   "hasOAuth": false,
   "logoName": "nexmo.png",
+  "uiSpec": {
+    "providerTabs": [
+      {
+        "text": "Settings",
+        "params": [
+          "api_key",
+          "api_secret"
+        ],
+        "type": "SETTINGS",
+        "default": "true"
+      },
+      {
+        "text": "Voice",
+        "params": [
+          "inbound",
+          "options",
+          "events",
+          "application_id"
+        ],
+        "type": "SETTINGS",
+        "default": "false"
+      },
+      {
+        "text": "SMS",
+        "params": [
+          "sms_numbers"
+        ],
+        "type": "SETTINGS",
+        "default": "false"
+      }
+    ]
+  },
   "providerData": [
     {
       "param": "application_id",
@@ -74,7 +106,7 @@
             {
               "param": "msisdn",
               "displayName": "Number",
-              "description": "The number to be used, available in the developer dashboard https://dashboard.nexmo.com/your-numbers.",
+              "description": "The number to be used, available in the developer dashboard https://dashboard.nexmo.com/your-numbers. A phone number in international format, that is E.164, for example 447700900000",
               "type": "STRING",
               "optional": false
             },
@@ -419,29 +451,36 @@
           ]
         }
       ]
+    },
+    {
+      "param": "sms_numbers",
+      "displayName": "Numbers",
+      "description": "The numbers that are can be used for incoming SMS requests.",
+      "type": "PARAM",
+      "optional": true,
+      "allowArray": true,
+      "valueParams": [
+        {
+          "param": "msisdn",
+          "displayName": "Number",
+          "description": "The number to be used, available in the developer dashboard https://dashboard.nexmo.com/your-numbers.  A phone number in international format, that is E.164, for example 447700900000.",
+          "type": "STRING",
+          "optional": false
+        },
+        {
+          "param": "country",
+          "displayName": "Country",
+          "description": "The character country code associated with the number.",
+          "type": "STRING",
+          "optional": false
+        }
+      ]
     }
   ],
-  "uiSpec": {
-    "providerTabs": [
-      {
-        "text": "Settings",
-        "params": [
-          "api_key",
-          "api_secret",
-          "inbound",
-          "options",
-          "events",
-          "application_id"
-        ],
-        "type": "SETTINGS",
-        "default": "true"
-      }
-    ]
-  },
   "module": [
     {
       "id": "connect",
-      "name": "Forward Call",
+      "name": "Forward Call (Voice)",
       "description": "Forward the current call to another endpoint.",
       "documentLink": "https://get.converse.ai/v2/docs/nexmo_connect",
       "hasReturn": false,
@@ -480,7 +519,7 @@
         {
           "param": "from",
           "displayName": "From",
-          "description": "The number of who the connecting call is from. If not set the active number will be used. This must be one of your Nexmo virtual numbers, another value will result in the caller ID being unknown.",
+          "description": "The number of who the connecting call is from. If not set the active number will be used. This must be one of your Nexmo virtual numbers, another value will result in the caller ID being unknown.  A phone number in international format, that is E.164, for example 447700900000.",
           "type": "STRING",
           "optional": true
         },
@@ -565,7 +604,7 @@
             {
               "param": "number",
               "displayName": "Number",
-              "description": "The number you will connect the call too",
+              "description": "The number you will connect the call too.  A phone number in international format, that is E.164, for example 447700900000",
               "type": "STRING",
               "optional": false
             },
@@ -630,7 +669,7 @@
     },
     {
       "id": "stream",
-      "name": "Play Audio",
+      "name": "Play Audio (Voice)",
       "description": "Play an audio file over an existing call.",
       "hasReturn": false,
       "needsChannel": true,
@@ -795,7 +834,7 @@
                 {
                   "param": "number",
                   "displayName": "Number",
-                  "description": "The number you will connect the call too",
+                  "description": "The number you will connect the call too.  A phone number in international format, that is E.164, for example 447700900000.",
                   "type": "STRING",
                   "optional": false
                 },
@@ -891,7 +930,7 @@
             {
               "param": "number",
               "displayName": "Number",
-              "description": "The number you will connect the call from",
+              "description": "The number you will connect the call from.  A phone number in international format, that is E.164, for example 447700900000.",
               "type": "STRING",
               "optional": false
             },
@@ -1011,7 +1050,7 @@
     },
     {
       "id": "record",
-      "name": "Record Call",
+      "name": "Record Call (Voice)",
       "description": "Start recording the call.",
       "documentLink": "https://get.converse.ai/v2/docs/nexmo_record",
       "hasReturn": true,
@@ -1241,7 +1280,7 @@
     },
     {
       "id": "join_conference",
-      "name": "Join Conference",
+      "name": "Join Conference (Voice)",
       "description": "Join a conference call that has been created by Create Conference",
       "documentLink": "https://get.converse.ai/v2/docs/nexmo_join_conference",
       "hasReturn": false,
@@ -1262,9 +1301,10 @@
     },
     {
       "id": "talk",
-      "name": "Send Message",
+      "name": "Send Message (Voice)",
       "description": "Send text that will be convered to speach using the specified options.",
       "hasReturn": false,
+      "documentLink": "https://get.converse.ai/v2/docs/nexmo_talk",
       "param": [
         {
           "param": "send_media_as",
@@ -1374,6 +1414,160 @@
               "optional": true
             }
           ]
+        }
+      ],
+      "needsChannel": true
+    },
+    {
+      "id": "send_sms",
+      "name": "Send SMS",
+      "description": "Send an SMS message",
+      "hasReturn": true,
+      "documentLink": "https://get.converse.ai/v2/docs/nexmo_send_sms",
+      "param": [
+        {
+          "param": "message",
+          "displayName": "Message",
+          "description": "The message that will be sent.",
+          "type": "STRING",
+          "optional": false
+        },
+        {
+          "param": "to",
+          "displayName": "To",
+          "description": "The number the SMS is sent to. A phone number in international format, that is E.164, for example 447700900000.",
+          "type": "STRING",
+          "optional": false
+        },
+        {
+          "param": "from",
+          "displayName": "From",
+          "description": "The number or name the SMS is sent from. A phone number in international format, that is E.164, for example 447700900000.",
+          "type": "STRING",
+          "optional": true
+        }
+      ],
+      "needsChannel": false
+    },
+    {
+      "id": "send_verify_code",
+      "name": "2FA Send Code",
+      "description": "Send a Verify PIN code to start the phone number verification process. This module returns a request Id that is used with the Check Verify Code module.",
+      "hasReturn": true,
+      "documentLink": "https://get.converse.ai/v2/docs/nexmo_send_verify_code",
+      "param": [
+        {
+          "param": "number",
+          "displayName": "Number",
+          "description": "The phone number that the PIN code is to be sent to. A phone number in international format, that is E.164, for example 447700900000.",
+          "type": "STRING",
+          "optional": false
+        },
+        {
+          "param": "country",
+          "displayName": "Country",
+          "description": "If do not set number in international format or you are not sure if number is correctly formatted, you can set the two-character country code. For example, GB, US.",
+          "type": "STRING",
+          "optional": true
+        },
+        {
+          "param": "brand",
+          "displayName": "Brand",
+          "description": "The name of the company or App you are using Verify for. This 18 character alphanumeric string is used in the body of Verify message. For example: \"Your brand PIN is ..\".",
+          "type": "STRING",
+          "optional": false
+        },
+        {
+          "param": "sender_id",
+          "displayName": "Sender Id",
+          "description": "An 11 character alphanumeric string to specify the SenderID for SMS sent by Verify. By default the sender id is VERIFY.",
+          "type": "STRING",
+          "optional": true
+        },
+        {
+          "param": "code_length",
+          "displayName": "Code Length",
+          "description": "The length of the PIN.",
+          "type": "ENUM",
+          "value": [
+            {
+              "label": "4",
+              "value": 4,
+              "default": true
+            },
+            {
+              "label": "6",
+              "value": 6
+            }
+          ],
+          "optional": true
+        },
+        {
+          "param": "language",
+          "displayName": "Language",
+          "description": "Use this parameter to explicitly set the language, accent, and gender used for the Verify request. The default value is en-us.",
+          "type": "STRING",
+          "optional": true
+        },
+        {
+          "param": "pin_expiry",
+          "displayName": "PIN Expiry",
+          "description": "A value, in seconds, that represents the time the PIN remains valid. The value can between 60 and 3600 seconds. The default value is 300. If Next Event Wait Time is specified then this value must be a multiple of the wait time, for example if the wait time is 60 then the PIN expiry could be 60,120,180 etc.",
+          "type": "NUMBER",
+          "optional": true
+        },
+        {
+          "param": "next_event_wait_time",
+          "displayName": "Next Event Wait Time",
+          "description": "A value, in seconds, between 60 and 900 that specifies the wait time between attempts to deliver the PIN.",
+          "type": "NUMBER",
+          "optional": true
+        }
+      ],
+      "needsChannel": false
+    },
+    {
+      "id": "check_verify_code",
+      "name": "2FA Check Code",
+      "description": "Check the verification PIN code sent by Send Verify Code.",
+      "hasReturn": true,
+      "documentLink": "https://get.converse.ai/v2/docs/nexmo_check_verify_code",
+      "exits": [
+        "valid",
+        "invalid",
+        "retry"
+      ],
+      "param": [
+        {
+          "param": "request_id",
+          "displayName": "Request Id",
+          "description": "A unique Id for the active verify request.",
+          "type": "STRING",
+          "optional": false
+        },
+        {
+          "param": "code",
+          "displayName": "PIN Code",
+          "description": "The PIN code to be verified.",
+          "type": "STRING",
+          "optional": false
+        }
+      ],
+      "needsChannel": false
+    },
+    {
+      "id": "cancel_verify_code",
+      "name": "2FA Cancel Code",
+      "description": "Cancel an active verification request",
+      "hasReturn": true,
+      "documentLink": "https://get.converse.ai/v2/docs/nexmo_delete_verify_code",
+      "param": [
+        {
+          "param": "request_id",
+          "displayName": "Request Id",
+          "description": "A unique Id for the active verify request",
+          "type": "STRING",
+          "optional": false
         }
       ],
       "needsChannel": true

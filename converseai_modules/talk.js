@@ -18,6 +18,12 @@ const Utils = require('../lib/utils.js');
 
 module.exports = function talk(app, body) {
 
+  var threadId = body.payload.channelSetting.threadId;
+  if (threadId.startsWith("sms_")) {
+    app.send(Status.SUCCESS);
+    return;
+  }
+
   var registrationData = body.payload.registrationData;
   var callbackUri = registrationData.callback_uri;
 

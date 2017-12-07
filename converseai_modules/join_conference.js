@@ -20,6 +20,14 @@ module.exports = function join_conference(app, body) {
   var registrationData = body.payload.registrationData;
   var channelSetting = body.payload.channelSetting;
 
+  var threadId = channelSetting.threadId;
+  if (threadId.startsWith("sms_")) {
+    var response = new ModuleResponse();
+    response.setExit("invalid");
+    app.send(Status.SUCCESS, response);
+    return;
+  }
+
   var code = body.payload.moduleParam.code;
   if (!code) {
     var response = new ModuleResponse();
@@ -28,7 +36,7 @@ module.exports = function join_conference(app, body) {
       code: "REQUIRED_PARAMS_UNDEFINED",
       description: "Required parameter 'Conference Code' is undefined."
     });
-    app.send(Status.SUCCESS, response);
+    app.send(Status.FAIL, response);
     return;
   }
 
@@ -43,7 +51,7 @@ module.exports = function join_conference(app, body) {
           code: "REQUIRED_PARAMS_UNDEFINED",
           description: "Required parameter 'Conference Code' is undefined."
         });
-        app.send(Status.SUCCESS, response);
+        app.send(Status.FAIL, response);
         return;
       }
 
@@ -57,7 +65,6 @@ module.exports = function join_conference(app, body) {
     var hasStarted = conferenceData.started;
 
     var userId = channelSetting.userId;
-    var threadId = channelSetting.threadId;
     var conferenceCode = conferenceData.code + "/0";
     if (conferenceData.isModerated) {
       conferenceCode = conferenceData.code + "/" + conferenceData.moderatorCode;

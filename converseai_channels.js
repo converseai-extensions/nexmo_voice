@@ -26,6 +26,35 @@ var onMessageInbound = function(app, body) {
   var registrationData = body.payload.registrationData;
 
   switch (action) {
+    case "sms":
+
+      var inbound = getSMSInboundPayloadData(body.payload);
+
+      var output = new InboundOutput();
+
+      output.setUserId(inbound.data.from);
+      output.setThreadId("sms_" + inbound.data.to);
+      output.setData(inbound.data);
+      output.setRuntimeCTX(inbound.runtime);
+      output.setSync(false);
+      output.setUserInfo({
+        email: "nexmo-" + inbound.data.from + "@cnv.ai",
+        firstName: inbound.data.from,
+        phoneNumber: inbound.data.from
+      });
+
+      var textMessage = new Message.Text();
+      textMessage.setText(inbound.runtime.message);
+      output.setMessage(textMessage);
+
+      var response = new AsyncInboundResponse();
+      response.addOutput(output);
+      response.setHTTPResponse({
+        httpStatus: 200,
+        body: "ok",
+      });
+      app.send(Status.SUCCESS, response);
+      break;
     case "number":
 
       var response = new OutboundResponse();
@@ -338,13 +367,35 @@ var onMessageOutbound = function(app, body) {
   var callbackUri = registrationData.callback_uri;
 
   var channelSetting = payload.channelSetting;
+
+  var userId = channelSetting.userId;
+  var threadId = channelSetting.threadId;
+
+  if (threadId.startsWith("sms_")) {
+
+    threadId = threadId.replace("sms_", "");
+
+    var message = payload.channelMessage.text;
+    if (!message) {
+      message = JSON.stringify(payload.channelMessage.media);
+    }
+
+    Utils.sendSMS(registrationData, body.caller, userId, threadId, message, function(ok, data) {
+      if (!ok) {
+        console.error(data);
+        app.fail(data);
+        return;
+      }
+
+      app.send(Status.SUCCESS);
+    });
+    return;
+  }
+
   var direction = "inbound";
   if (channelSetting.runtimeCTX && channelSetting.runtimeCTX.direction) {
     direction = channelSetting.runtimeCTX.direction;
   }
-
-  var userId = channelSetting.userId;
-  var threadId = channelSetting.threadId;
 
   var ncco = [];
   if (channelSetting.runtimeCTX.ncco) {
@@ -542,6 +593,57 @@ function handleEventInbound(app, body) {
 
 }
 
+function getSMSInboundPayloadData(payload) {
+
+  var from = null;
+  var to = null;
+  var messageId = null;
+  var conversationUUID = null;
+  var keywords = null;
+  var timestamp = null;
+  var message = null;
+  var type = null;
+
+  if (payload.queryParam) {
+    if (payload.queryParam.keyword) {
+      keywords = payload.queryParam.keyword.data;
+    }
+    if (payload.queryParam["message-timestamp"]) {
+      timestamp = payload.queryParam["message-timestamp"].data[0];
+    }
+    if (payload.queryParam.messageId) {
+      messageId = payload.queryParam.messageId.data[0];
+    }
+    if (payload.queryParam.msisdn) {
+      from = payload.queryParam.msisdn.data[0];
+    }
+    if (payload.queryParam.text) {
+      message = payload.queryParam.text.data[0];
+    }
+    if (payload.queryParam.to) {
+      to = payload.queryParam.to.data[0];
+    }
+    if (payload.queryParam.type) {
+      type = payload.queryParam.type.data[0];
+    }
+  }
+
+  return {
+    data: {
+      from: from,
+      to: to,
+      messageId: messageId,
+    },
+    runtime: {
+      keywords: keywords,
+      timestamp: timestamp,
+      message: message,
+      type: type,
+      isVoice: false,
+    }
+  }
+}
+
 function getInboundPayloadData(payload, newInbound) {
 
   var from = null;
@@ -690,6 +792,7 @@ function getInboundPayloadData(payload, newInbound) {
       conversationUUID: conversationUUID,
       recordingFormat: recordingFormat,
       conference: conferenceCode,
+      isVoice: true,
     }
   }
 }

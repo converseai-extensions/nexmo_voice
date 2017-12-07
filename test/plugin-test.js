@@ -16,7 +16,7 @@ after(function (done) {
   server.close(done);
 });
 
-describe('Nexmo Voice', function () {
+describe('Nexmo', function () {
 
   it('Responds to /', function(done) {
     request(server)

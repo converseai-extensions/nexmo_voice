@@ -24,7 +24,7 @@ module.exports = function delete_conference(app, body) {
       code: "REQUIRED_PARAMS_UNDEFINED",
       description: "Required parameter 'Conference Code' is undefined."
     });
-    app.send(Status.SUCCESS, response);
+    app.send(Status.FAIL, response);
     return;
   }
 
@@ -39,7 +39,7 @@ module.exports = function delete_conference(app, body) {
           code: "REQUIRED_PARAMS_UNDEFINED",
           description: "Required parameter 'Conference Code' is undefined."
         });
-        app.send(Status.SUCCESS, response);
+        app.send(Status.FAIL, response);
         return;
       }
       // Not ok with no data, just means that there was nothing to get

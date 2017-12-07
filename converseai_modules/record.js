@@ -55,6 +55,11 @@ function startRecoding(app, body) {
   var userId = body.payload.channelSetting.userId;
   var threadId = body.payload.channelSetting.threadId;
 
+  if (threadId.startsWith("sms_")) {
+    app.send(Status.SUCCESS);
+    return;
+  }
+
   var registrationData = body.payload.registrationData;
   var callbackUri = registrationData.callback_uri;
 

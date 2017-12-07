@@ -30,18 +30,13 @@ var onProviderRegister = function(app, body) {
     Utils.createApplication(api_key, api_secret, inboundURI, provider, function(ok, application) {
 
       application_id = application.id;
-
-      if (registrationData.inbound && registrationData.inbound.numbers) {
-        Utils.updateLinkNumbers(api_key, api_secret, application_id, inboundURI, registrationData.inbound.numbers);
-      }
-
       registrationData.application_id = application_id;
 
-      var localData = {
-        privateKey: application.keys.private_key,
-      }
+      Utils.updateLinkNumbers(api_key, api_secret, application_id, inboundURI, registrationData.inbound.numbers, registrationData.sms_numbers);
 
-      Utils.setPluginLocalData(body.caller, "provider", "private_key", localData);
+      Utils.setPluginLocalData(body.caller, "provider", "private_key", {
+        privateKey: application.keys.private_key,
+      });
 
       var response = new RegistrationDataResponse();
       response.setRegistrationData(registrationData);
@@ -51,9 +46,7 @@ var onProviderRegister = function(app, body) {
   } else {
     Utils.updateApplication(api_key, api_secret, application_id, inboundURI, provider);
 
-    if (registrationData.inbound && registrationData.inbound.numbers) {
-      Utils.updateLinkNumbers(api_key, api_secret, application_id, inboundURI, registrationData.inbound.numbers);
-    }
+    Utils.updateLinkNumbers(api_key, api_secret, application_id, inboundURI, registrationData.inbound.numbers, registrationData.sms_numbers);
 
     var response = new RegistrationDataResponse();
     response.setRegistrationData(registrationData);

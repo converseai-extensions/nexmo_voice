@@ -20,6 +20,12 @@ module.exports = function stream(app, body) {
   var registrationData = body.payload.registrationData;
   var callbackUri = registrationData.callback_uri;
 
+  var threadId = body.payload.channelSetting.threadId;
+  if (threadId.startsWith("sms_")) {
+    app.send(Status.SUCCESS);
+    return;
+  }
+
   var status = Status.SUCCESS;
   var messageType = MessageMedia.TYPE_COMMENT;
 
@@ -82,7 +88,6 @@ module.exports = function stream(app, body) {
     var options = Utils.getOutboundOptions(null, registrationData, moduleParam.input_options);
 
     var userId = body.payload.channelSetting.userId;
-    var threadId = body.payload.channelSetting.threadId;
 
     var item = {
       action: "input",

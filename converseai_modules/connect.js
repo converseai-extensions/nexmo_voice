@@ -27,7 +27,12 @@ module.exports = function connect(app, body) {
   var threadId = moduleParam.from;
   if (!threadId || threadId == "") {
     threadId = channelSetting.threadId;
+    if (threadId.startsWith("sms_")) {
+      app.send(Status.SUCCESS);
+      return;
+    }
   }
+
   var timeout = moduleParam.timeout;
   if (timeout) {
     timeout = parseInt(timeout);
