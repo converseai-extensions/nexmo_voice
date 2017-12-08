@@ -411,6 +411,19 @@ var onMessageOutbound = function(app, body) {
       }
     }
 
+    if (payload.channelMessage.media.entity.queue) {
+      channelSetting.runtimeCTX.ncco = ncco;
+
+      var response = new OutboundResponse();
+
+      response.setHTTPResponse(null);
+      //response.setChannelSetting(channelSetting);
+      response.channelSetting = channelSetting;
+
+      app.send(Status.SUCCESS, response);
+      return;
+    }
+
   } else if (payload.channelMessage.text) {
 
     var msgContext = payload.msgContext;
@@ -458,9 +471,7 @@ var onMessageOutbound = function(app, body) {
     }
 
     if (msgContext == "COMMENT") {
-      // This is a comment, store it in plugin data and send it in batch.
 
-      //Utils.setPluginLocalData(body.caller, "conversation", "ncco", ncco);
       channelSetting.runtimeCTX.ncco = ncco;
 
       var response = new OutboundResponse();

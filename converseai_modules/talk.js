@@ -29,6 +29,7 @@ module.exports = function talk(app, body) {
 
   var status = Status.SUCCESS;
   var messageType = MessageMedia.TYPE_COMMENT;
+  var queue = false;
 
   var moduleParam = body.payload.moduleParam;
 
@@ -37,6 +38,9 @@ module.exports = function talk(app, body) {
     messageType = MessageMedia.TYPE_QUESTION;
   } else if (sendMediaAs == "ANSWER") {
     status = Status.STOP;
+  } else {
+    // This is a queued comment, don't tell the conversation to stop
+    queue = true;
   }
 
   var moduleOptions = {
@@ -110,7 +114,8 @@ module.exports = function talk(app, body) {
   var richMedia = new RichMedia();
   richMedia.setRichMediaType("ncco");
   richMedia.setRichMediaObject({
-    ncco: ncco
+    ncco: ncco,
+    queue: queue,
   });
 
   var message = new MessageMedia();

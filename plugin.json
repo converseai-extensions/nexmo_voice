@@ -1309,7 +1309,7 @@
         {
           "param": "send_media_as",
           "displayName": "Send Media As",
-          "description": "State how you want this message is to be treated, either as the next states question or as the current states answer.",
+          "description": "State how you want this message is to be treated, either as the next states question or as the current states answer. If you select to send it as a new comment, the message will be queued and sent with the next question or answer that is sent.",
           "type": "ENUM",
           "optional": true,
           "value": [
@@ -1317,6 +1317,10 @@
               "label": "Next Question",
               "value": "QUESTION",
               "default": true
+            },
+            {
+              "label": "New Comment",
+              "value": "COMMENT"
             },
             {
               "label": "Current Answer",
