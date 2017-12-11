@@ -62,7 +62,8 @@ module.exports = function join_conference(app, body) {
       return;
     }
 
-    var hasStarted = conferenceData.started;
+    var wasPreviouslyStarted = conferenceData.started;
+    var shouldStartCall = true;
 
     var userId = channelSetting.userId;
     var conferenceCode = conferenceData.code + "/0";
@@ -80,13 +81,17 @@ module.exports = function join_conference(app, body) {
       endOnExit: "false",
     };
 
-    if (conferenceData.record && ((!conferenceData.isModerated && !hasStarted) || conferenceData.moderator)) {
-      conversationNcco.record = "true";
+    if (conferenceData.record) {
+
+      if ((!conferenceData.isModerated && !wasPreviouslyStarted) || conferenceData.moderator) {
+        conversationNcco.record = "true";
+      }
 
       var format = conferenceData.recordOptions.format;
       if (!format) {
         format = "mp3";
       }
+
       conversationNcco.format = format;
       conversationNcco.eventUrl[0] += "&intent=" + conferenceData.recordOptions.intent +
         "&entities=" + Buffer.from(JSON.stringify(conferenceData.recordOptions.entities)).toString('base64') +
@@ -107,12 +112,13 @@ module.exports = function join_conference(app, body) {
         }
       } else {
         conversationNcco.startOnEnter = "false";
+        shouldStartCall = false;
 
         if (moderatorOptions.music) {
           conversationNcco.musicOnHoldUrl = [moderatorOptions.music];
         }
 
-        if (!hasStarted && moderatorOptions.message) {
+        if (!wasPreviouslyStarted && moderatorOptions.message) {
           useJoinMessage = false;
 
           var talk = {
@@ -166,7 +172,7 @@ module.exports = function join_conference(app, body) {
     response.setExit("connected");
     app.send(Status.SUCCESS, response);
 
-    if (!hasStarted) {
+    if (!wasPreviouslyStarted && shouldStartCall) {
       conferenceData.started = true;
 
       if (conferenceData.isModerated) {
