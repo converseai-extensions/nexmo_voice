@@ -94,6 +94,7 @@ module.exports = function join_conference(app, body) {
     }
 
     var ncco = [];
+    var useJoinMessage = true;
 
     if (conferenceData.isModerated) {
       var moderatorOptions = conferenceData.moderatorOptions;
@@ -111,7 +112,9 @@ module.exports = function join_conference(app, body) {
           conversationNcco.musicOnHoldUrl = [moderatorOptions.music];
         }
 
-        if (!hasStarted) {
+        if (!hasStarted && moderatorOptions.message) {
+          useJoinMessage = false;
+
           var talk = {
             action: "talk",
             text: moderatorOptions.message,
@@ -126,6 +129,24 @@ module.exports = function join_conference(app, body) {
           ncco.push(talk);
         }
       }
+    }
+
+    if (useJoinMessage && body.payload.moduleParam.join_message) {
+      // If we have a join message and not using the moderator message we can send the join message
+
+      var talk = {
+        action: "talk",
+        text: body.payload.moduleParam.join_message,
+        loop: 1,
+      };
+
+      var options = Utils.getOutboundOptions(threadId, registrationData, null);
+      if (options.voiceName) {
+        talk.voiceName = options.voiceName;
+      }
+
+      ncco.push(talk);
+
     }
 
     ncco.push(conversationNcco);

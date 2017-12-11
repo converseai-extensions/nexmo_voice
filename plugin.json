@@ -1291,6 +1291,13 @@
           "description": "The code used to join the conference call",
           "type": "STRING",
           "optional": false
+        },
+        {
+          "param": "join_message",
+          "displayName": "Join Message",
+          "description": "Optional message to be played before joining the call.",
+          "type": "STRING",
+          "optional": true
         }
       ],
       "needsChannel": true,
