@@ -53,7 +53,11 @@ module.exports = function send_verify_code(app, body) {
 
   if (moduleParam.country) {
     request.country = moduleParam.country;
+  } else {
+    // If no country is defined we can do our sanitize logic
+    request.number = Utils.sanitizeNumber(number);
   }
+
   if (moduleParam.sender_id) {
     request.sender_id = moduleParam.sender_id;
   }

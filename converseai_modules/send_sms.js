@@ -18,7 +18,7 @@ module.exports = function send_sms(app, body) {
   var registrationData = body.payload.registrationData;
   var moduleParam = body.payload.moduleParam;
 
-  var to = moduleParam.to;
+  var to = Utils.sanitizeNumber(moduleParam.to);
   if (!to) {
     var response = new ModuleResponse();
     response.setError({
@@ -30,7 +30,7 @@ module.exports = function send_sms(app, body) {
     return;
   }
 
-  var from = moduleParam.from;
+  var from = Utils.sanitizeNumber(moduleParam.from);
   if (!from) {
     if (registrationData.sms_numbers && registrationData.sms_numbers.length > 0) {
       from = registrationData.sms_numbers[0].msisdn;

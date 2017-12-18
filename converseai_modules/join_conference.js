@@ -75,7 +75,7 @@ module.exports = function join_conference(app, body) {
       action: "conversation",
       name: conferenceData.name,
       startOnEnter: "true",
-      eventUrl: [registrationData.callback_uri + "?action=conference&to=" + userId + "&from=" + threadId + "&conference=" + conferenceCode],
+      eventUrl: [registrationData.callback_uri + "?action=conference&to=" + threadId + "&from=" + userId + "&conference=" + conferenceCode],
       eventMethod: "POST",
       record: "false",
       endOnExit: "false",

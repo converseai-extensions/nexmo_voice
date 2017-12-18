@@ -24,7 +24,7 @@ module.exports = function connect(app, body) {
 
   var userId = channelSetting.userId;
 
-  var threadId = moduleParam.from;
+  var threadId = Utils.sanitizeNumber(moduleParam.from);
   if (!threadId || threadId == "") {
     threadId = channelSetting.threadId;
     if (threadId.startsWith("sms_")) {
@@ -68,8 +68,8 @@ module.exports = function connect(app, body) {
     connect_ncco.eventType = "synchronous";
     connect_ncco.eventUrl = [
       callbackUri + "?action=fallback&intent=" + fallback.intent +
-      "&to=" + userId +
-      "&from=" + threadId +
+      "&to=" + threadId +
+      "&from=" + userId +
       "&entities=" + Buffer.from(JSON.stringify(fallback.entities)).toString('base64')
     ];
     connect_ncco.eventMethod = "POST";
@@ -82,7 +82,7 @@ module.exports = function connect(app, body) {
 
       connect_ncco.endpoint.push({
         type: "phone",
-        number: phoneEndpoint.number,
+        number: Utils.sanitizeNumber(phoneEndpoint.number),
         dtmfAnswer: phoneEndpoint.dtmfAnswer,
       });
       break;

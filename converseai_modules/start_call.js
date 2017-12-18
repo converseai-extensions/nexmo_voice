@@ -73,7 +73,7 @@ module.exports = function start_call(app, body) {
 
         bodyData.to.push({
           type: "phone",
-          number: phoneEndpoint.number,
+          number: Utils.sanitizeNumber(phoneEndpoint.number),
           dtmfAnswer: phoneEndpoint.dtmfAnswer,
         });
         break;
@@ -117,7 +117,7 @@ module.exports = function start_call(app, body) {
 
       bodyData.from = {
         type: "phone",
-        number: phoneEndpoint.number,
+        number: Utils.sanitizeNumber(phoneEndpoint.number),
         dtmfAnswer: phoneEndpoint.dtmfAnswer,
       };
       break;
