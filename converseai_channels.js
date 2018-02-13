@@ -19,6 +19,7 @@ const Utils = require('./lib/utils.js');
 
 const AsyncInboundResponse = require('@converseai/plugins-sdk').Payloads.Channel.Async.InboundResponse;
 
+
 var onMessageInbound = function(app, body) {
 
   var action = body.payload.queryParam.action.data[0];

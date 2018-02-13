@@ -44,12 +44,13 @@ module.exports = function join_conference(app, body) {
     if (!ok) {
       // It is not ok if the get failed or if the data is empty
       if (conferenceData) {
+        console.error(conferenceData);
         // Not ok with data means there is an error
         var response = new ModuleResponse();
         response.setError({
           httpStatus: 400,
           code: "REQUIRED_PARAMS_UNDEFINED",
-          description: "Required parameter 'Conference Code' is undefined."
+          description: "Failed to find conference data"
         });
         app.send(Status.FAIL, response);
         return;
