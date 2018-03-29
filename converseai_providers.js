@@ -12,7 +12,7 @@ const Status = require('@converseai/plugins-sdk').Status;
 const RegistrationDataResponse = require('@converseai/plugins-sdk').Payloads.RegistrationDataResponse;
 const Utils = require('./lib/utils.js');
 
-var onProviderRegister = function(app, body) {
+var onProviderRegister = function (app, body) {
 
   var provider = body.caller.provider;
   var registrationData = body.payload.registrationData;
@@ -21,13 +21,16 @@ var onProviderRegister = function(app, body) {
   if (inboundURI) {
     registrationData.callback_uri = inboundURI;
   }
+  if (!registrationData.inbound) {
+    registrationData.inbound = {};
+  }
 
   var api_key = registrationData.api_key;
   var api_secret = registrationData.api_secret;
 
   var application_id = registrationData.application_id;
   if (!application_id) {
-    Utils.createApplication(api_key, api_secret, inboundURI, provider, function(ok, application) {
+    Utils.createApplication(api_key, api_secret, inboundURI, provider, function (ok, application) {
 
       application_id = application.id;
       registrationData.application_id = application_id;
@@ -54,7 +57,7 @@ var onProviderRegister = function(app, body) {
   }
 }
 
-var onProviderUnregister = function(app, body) {
+var onProviderUnregister = function (app, body) {
 
   var registrationData = body.payload.registrationData;;
 
